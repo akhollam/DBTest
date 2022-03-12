@@ -1,9 +1,9 @@
-package services;
+package com.services;
 
 import java.util.List;
 
-import exceptions.ServiceException;
-import modals.Product;
+import com.exceptions.ServiceException;
+import com.modals.Product;
 
 public interface ProductService {
 
@@ -14,6 +14,8 @@ public interface ProductService {
 	void delete(int productId) throws ServiceException;
 	
 	List<Product> findAll() throws ServiceException;
+	
+	int productCount();
 	
 	Product findById(int productId);
 	

@@ -1,10 +1,13 @@
+package com.app;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import utils.DBUtil;
+import com.utils.DBUtil;
 
 public class CustomerDBTest {
 
@@ -73,8 +76,13 @@ public class CustomerDBTest {
 				Statement statement = connection.createStatement();
 
 				ResultSet resultSet = statement
-						.executeQuery("SELECT customerNumber, contactFirstName, contactLastName FROM customers");) {
-
+						.executeQuery("SELECT * FROM customers");) {
+			
+			ResultSetMetaData metadata =  resultSet.getMetaData();
+			
+			int coulumnCount = metadata.getColumnCount();
+			String columnName = metadata.getColumnName(1);
+			
 			while (resultSet.next()) {
 
 				Integer custNo = resultSet.getInt("customerNumber");

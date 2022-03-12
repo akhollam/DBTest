@@ -1,4 +1,4 @@
-package services;
+package com.services;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -9,17 +9,24 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import exceptions.ServiceException;
-import modals.Product;
-import utils.DBUtil;
+import org.springframework.stereotype.Component;
 
+import com.exceptions.ServiceException;
+import com.modals.Product;
+import com.utils.DBUtil;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Component
 public class ProductServiceImpl implements ProductService {
-
+	
 	@Override
 	public void save(Product product) throws ServiceException {
 
 		String sql = "INSERT INTO product(name, category, quantity, code, availableDate) VALUES (?, ?, ?, ?, ?);";
-
+		log.trace("save query - {}", sql);
+		
 		try (Connection con = DBUtil.getConnection();
 				PreparedStatement preparedStatement = con.prepareStatement(sql);) {
 
@@ -32,8 +39,8 @@ public class ProductServiceImpl implements ProductService {
 			preparedStatement.executeUpdate();
 
 		} catch (SQLException e) {
-
-			throw new ServiceException("Error while saving the product." + e.getMessage());
+			log.error("SQL Exception occured.", e);
+			throw new ServiceException("Error while saving the product.", e);
 		}
 
 	}
@@ -44,6 +51,8 @@ public class ProductServiceImpl implements ProductService {
 		String sql = "UPDATE product set name = ?, category = ?, quantity = ?, code = ?, availableDate = ?"
 				+ "WHERE id = ?;";
 
+		log.trace("update query - {}", sql);
+		
 		try (Connection con = DBUtil.getConnection();
 				PreparedStatement preparedStatement = con.prepareStatement(sql);) {
 
@@ -57,7 +66,7 @@ public class ProductServiceImpl implements ProductService {
 			preparedStatement.executeUpdate();
 
 		} catch (SQLException e) {
-
+			log.error("SQL Exception occured.", e);
 			throw new ServiceException("Error while saving the product." + e.getMessage());
 		}
 		
@@ -67,6 +76,8 @@ public class ProductServiceImpl implements ProductService {
 	public void delete(int productId) throws ServiceException {
 
 		String sql = "DELETE FROM product WHERE id = ?";
+		
+		log.trace("delete query - {}", sql);
 
 		try (Connection con = DBUtil.getConnection();
 				PreparedStatement preparedStatement = con.prepareStatement(sql);) {
@@ -75,6 +86,7 @@ public class ProductServiceImpl implements ProductService {
 			preparedStatement.executeUpdate();
 
 		} catch (SQLException e) {
+			log.error("SQL Exception occured.", e);
 			throw new ServiceException("Error while saving the product." + e.getMessage());
 		}
 
@@ -84,7 +96,7 @@ public class ProductServiceImpl implements ProductService {
 	public List<Product> findAll() throws ServiceException {
 
 		String sql = "SELECT * FROM product;";
-		List<Product> products = new ArrayList<Product>();
+		List<Product> products = new ArrayList<>();
 
 		try (Connection con = DBUtil.getConnection();
 				Statement preparedStatement = con.createStatement();
@@ -101,7 +113,7 @@ public class ProductServiceImpl implements ProductService {
 			}
 
 		} catch (SQLException e) {
-
+			log.error("SQL Exception occured.", e);
 			throw new ServiceException("Error while saving the product." + e.getMessage());
 		}
 
@@ -110,8 +122,12 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public Product findById(int productId) {
-		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public int productCount() {
+		return 0;
 	}
 
 }
